@@ -15,7 +15,7 @@ import {
 import { findResultsState } from 'react-instantsearch-dom/server';
 import { useSearchContext } from '../contexts/search';
 import { client } from '../util/search-client';
-import { createUrl } from '../util/search-helpers';
+import { createUrl, searchStateFromRouterQuery } from '../util/search-helpers';
 
 function Hit({ ...props }) {
   return (
@@ -37,10 +37,9 @@ const HawkeSearch: NextPage<InstantSearchProps> = ({
   searchState: initialState,
   ...props
 }: InstantSearchProps) => {
-  console.log('resultsState', resultsState);
-  console.log('initialState', initialState);
   const { searchState, setSearchState } = useSearchContext();
 
+  console.log();
   return (
     <InstantSearch
       {...props}
@@ -82,7 +81,7 @@ const HawkeSearch: NextPage<InstantSearchProps> = ({
 };
 
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
-  const initialState = qs.parse(qs.stringify(query));
+  const initialState = searchStateFromRouterQuery(query);
   const resultsState = await findResultsState(HawkeSearch, {
     searchClient: client,
     searchState: initialState,

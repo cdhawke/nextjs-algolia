@@ -1,17 +1,13 @@
 import type { NextPage } from 'next';
-import { Form, Container, Row, Col } from 'react-bootstrap';
+import { Container, Row, Col } from 'react-bootstrap';
+import styles from './index.module.scss';
 
 const HawkeSearch: NextPage = () => {
   return (
     <Container>
       <Row>
-        <Col>
-          <Form
-            action="/search"
-            method="GET"
-            role="search"
-            className="d-flex align-items-center"
-          ></Form>
+        <Col className="d-flex justify-content-end mt-3">
+          ^ Search for something
         </Col>
       </Row>
     </Container>

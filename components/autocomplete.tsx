@@ -1,4 +1,4 @@
-import { autocomplete } from '@algolia/autocomplete-js';
+import { autocomplete, AutocompleteOptions } from '@algolia/autocomplete-js';
 import React, {
   createElement,
   Fragment,
@@ -8,8 +8,19 @@ import React, {
 } from 'react';
 import { render } from 'react-dom';
 
-export function Autocomplete({ ...props }) {
-  const containerRef = useRef(null);
+/**
+ * Autocomplete is a custom component that implements the @algolia/autocomplete-js
+ *
+ * @param {Omit<AutocompleteOptions<any>, 'container'>} {
+ *   ...props
+ * } default AutocompleteOptions without the container property. We want container to be specified within
+ * this component, so don't want to be forced to pass it as an option.
+ * @return {*}
+ */
+export const Autocomplete = ({
+  ...props
+}: Omit<AutocompleteOptions<any>, 'container'>) => {
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!containerRef.current) {
@@ -32,4 +43,4 @@ export function Autocomplete({ ...props }) {
   }, []);
 
   return <div ref={containerRef} />;
-}
+};

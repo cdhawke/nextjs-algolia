@@ -9,11 +9,11 @@ import {
   useState,
 } from 'react';
 import { SearchState } from 'react-instantsearch-core';
-import qs from 'qs';
 import {
   searchStateFromRouterQuery,
   searchStateToRouterQuery,
 } from '../util/search-helpers';
+import nohop from 'nohop';
 
 interface SearchContextProps {
   searchState: SearchState;
@@ -36,10 +36,19 @@ const SearchProvider: FC = ({ children }) => {
     if (!searchState || Object.keys(searchState).length === 0) {
       return;
     }
-    router.push({
-      pathname: '/search',
-      query: searchStateToRouterQuery(searchState),
-    });
+
+    const routerPush = async () =>
+      await router.push({
+        pathname: '/search',
+        query: searchStateToRouterQuery(searchState),
+      });
+
+    // nohop debounces the provided function for the given amount of time.
+    // We wait 400 seconds after the search state has been updated in ANY case
+    // before actually invoking the router. This is a good catch-all place to
+    // debounce, because anything that updates the state will be essentially debounced.
+    nohop(routerPush, 400)();
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchState]);
 
